@@ -18,7 +18,7 @@ class ShoppingCart:
         temp = 0
         for x, y in self.goods:
             temp += x.total_cost(y)
-        return temp
+        return round(temp, 2)
 
 
 
