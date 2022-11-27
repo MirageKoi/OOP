@@ -8,17 +8,18 @@ class Product:
 
 
 class ShoppingCart:
-    def __init__(self, *goods):
-        self.goods = goods
+    def __init__(self):
+        self.goods = []
 
-    def pay(self) -> str:
+    def add_goods(self, prod: Product, quant: int):
+        self.goods.append((prod, quant))
+
+    def pay(self) -> float:
         check = 0
-        f_goods = []
         for unit in self.goods:
             check += unit[0].total_cost(unit[1])
-            f_goods.append((unit[0].name, unit[1]))
 
-        return f'Total cost is {round(check, 2)} leafs. Now you have {f_goods}'
+        return float(check)
 
 
 apple = Product('apple', 1.8)
@@ -28,7 +29,10 @@ bread = Product('bread', 3.2)
 chiken = Product('chiken', 6.2)
 
 
-c1 = ShoppingCart((apple, 5), (cheese, 3), (milk, 2))
+c1 = ShoppingCart()
+c1.add_goods(apple, 5)
+c1.add_goods(cheese, 3)
+c1.add_goods(milk, 2)
 
 print(c1.pay())
 
