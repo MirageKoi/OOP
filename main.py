@@ -15,8 +15,11 @@ class ShoppingCart:
         self.goods.append((prod, quant))
 
     def pay(self) -> float:
-        item, count = zip(*self.goods)
-        return round(sum((x.total_cost(y) for x, y in zip(item, count))), 2)
+        temp = 0
+        for x, y in self.goods:
+            temp += x.total_cost(y)
+        return temp
+
 
 
 apple = Product('apple', 1.8)
