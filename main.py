@@ -24,11 +24,19 @@ class ShoppingCart:
         self.goods = list(goods)
 
     def add_goods(self, prod: Product, quant: int = 1):
-        for count, (x, y) in enumerate(self.goods):
-            if x == prod:
-                self.goods[count][1] += quant
-                return
-        self.goods.append([prod, quant])
+        if not isinstance(prod, ShoppingCart):
+            for count, (x, y) in enumerate(self.goods):
+                if x == prod:
+                    self.goods[count][1] += quant
+                    return
+            self.goods.append([prod, quant])
+            return
+        for (x1, y2) in prod.goods:
+            for count, (x, y) in enumerate(self.goods):
+                if x == x1:
+                    self.goods[count][1] += y2
+                    return
+            self.goods.append([x1, y2])
 
     def pay(self) -> float:
         temp = 0
@@ -61,7 +69,8 @@ c2 = ShoppingCart([bread, 3], [pc, 1], [chiken, 9])
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
-# c1.add_goods(c2)
+print(c1)
+c1.add_goods(c2)
 print(c1.pay())
 # print(c2.pay())
 
