@@ -7,7 +7,7 @@ class Product:
         return round(self.price * quant, 2)
 
     def __repr__(self) -> str:
-        return f'{self.name}: {self.price}'
+        return f'{self.name} cost {self.price}'
 
     def __eq__(self, other):
         return self.name == other.name and self.price == other.price
@@ -20,35 +20,36 @@ class Product:
 
 
 class ShoppingCart:
-    def __init__(self, *goods: list):
-        self.goods = list(goods)
+    def __init__(self) -> None:
+        self.goods = []
+        self.quant = []
 
     def add_goods(self, prod: Product, quant: int = 1):
-        if not isinstance(prod, ShoppingCart):
-            for count, (x, y) in enumerate(self.goods):
-                if x == prod:
-                    self.goods[count][1] += quant
-                    return
-            self.goods.append([prod, quant])
+        if prod in self.goods:
+            self.quant[self.goods.index(prod)] += quant
             return
-        for (x1, y2) in prod.goods:
-            for count, (x, y) in enumerate(self.goods):
-                if x == x1:
-                    self.goods[count][1] += y2
-                    return
-            self.goods.append([x1, y2])
+        self.goods.append(prod)
+        self.quant.append(quant)
 
     def pay(self) -> float:
         temp = 0
-        for x, y in self.goods:
+        for x, y in zip(self.goods, self.quant):
             temp += x.total_cost(y)
         return round(temp, 2)
 
     def __repr__(self) -> str:
-        return f'{self.goods}'
+        return f'{list(zip(self.goods, self.quant))} '
 
     def __float__(self):
         return self.pay()
+
+    def __add__(self, other):
+        if isinstance(other, ShoppingCart):
+            temp = zip(other.goods, other.quant)
+            for x, y in temp:
+                self.add_goods(x, y)
+            return
+        return self.add_goods(other)
 
 
 apple = Product('apple', 1.8)
@@ -59,27 +60,34 @@ chiken = Product('chiken', 6.2)
 pc = Product('apple', 20000)
 apple2 = Product('apple', 1.8)
 
+# testing
 
 c1 = ShoppingCart()
 c1.add_goods(apple, 5)
 c1.add_goods(cheese, 3)
 c1.add_goods(milk, 2)
 c1.add_goods(milk, 3)
-c2 = ShoppingCart([bread, 3], [pc, 1], [chiken, 9], [milk, 1])
-c2.add_goods(pc, 1)
-c2.add_goods(pc, 1)
-c2.add_goods(pc, 1)
-print(c1)
-c1.add_goods(c2)
-c1.add_goods(milk, 1)
-print(c1.pay())
-# print(c2.pay())
 
+c1 + milk
+print(c1.goods)
+print(c1.quant)
+c2 = ShoppingCart()
+c2.add_goods(pc, 1)
+c2.add_goods(pc, 1)
+c2.add_goods(pc, 1)
+c2.add_goods(milk, 3)
+c1 + c2
+c1.add_goods(milk, 3)
+c1 + milk
+print(c1)
+print(c1.pay())
+print(c2.pay())
+print(c1)
 
 
 print(c1)
 print(c2)
-# print(apple==pc)
-# print(apple==apple2)
+print(apple == pc)
+print(apple == apple2)
 print(float(c1))
 print(float(c2))
