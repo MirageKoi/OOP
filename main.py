@@ -13,10 +13,10 @@ class Product:
         return self.name == other.name and self.price == other.price
 
     def __float__(self) -> float:
-        return float(self.price)
+        return self.price
 
     def __str__(self) -> str:
-        return str(self.name)
+        return self.name
 
 
 class ShoppingCart:
@@ -65,12 +65,13 @@ c1.add_goods(apple, 5)
 c1.add_goods(cheese, 3)
 c1.add_goods(milk, 2)
 c1.add_goods(milk, 3)
-c2 = ShoppingCart([bread, 3], [pc, 1], [chiken, 9])
+c2 = ShoppingCart([bread, 3], [pc, 1], [chiken, 9], [milk, 1])
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
 print(c1)
 c1.add_goods(c2)
+c1.add_goods(milk, 1)
 print(c1.pay())
 # print(c2.pay())
 
