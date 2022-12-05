@@ -47,16 +47,15 @@ class ShoppingCart:
         return zip(self.goods, self.quant)
 
     def __add__(self, other):
-        if isinstance(self, ShoppingCart) and isinstance(other, ShoppingCart):
-            temp = ShoppingCart()
-            temp.goods.extend(self.goods)
-            temp.quant.extend(self.quant)
-
+        new_cart = ShoppingCart()
+        new_cart.goods = self.goods.copy()
+        new_cart.quant = self.quant.copy()
+        if isinstance(other, ShoppingCart):
             for x, y in other:
-                temp.add_goods(x, y)
-            return temp
+                new_cart.add_goods(x, y)
         if isinstance(other, Product):
-            return self.add_goods(other, 1)
+            new_cart.add_goods(other, 1)
+        return new_cart
 
 
 apple = Product('apple', 1.8)
@@ -88,11 +87,12 @@ print(c2, 'c2')
 
 c3 = c1 + c2
 c1.add_goods(milk, 3)
-c1 + milk
+c5 = c1 + milk
 c4 = c1 + c3
 print(c1, '???')
 print(c3, 'c3')
 print(c4, 'c4')
+print(c5, 'c5')
 print(c1.get_total())
 print(c2.get_total())
 print(c1)
