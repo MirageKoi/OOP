@@ -24,32 +24,39 @@ class ShoppingCart:
         self.goods = []
         self.quant = []
 
-    def add_goods(self, prod: Product, quant: int = 1):
+    def add_goods(self, prod: Product, quant: int):
         if prod in self.goods:
             self.quant[self.goods.index(prod)] += quant
             return
         self.goods.append(prod)
         self.quant.append(quant)
 
-    def pay(self) -> float:
+    def get_total(self) -> float:
         temp = 0
-        for x, y in zip(self.goods, self.quant):
-            temp += x.total_cost(y)
+        for prod, quant in self:
+            temp += prod.total_cost(quant)
         return round(temp, 2)
 
     def __repr__(self) -> str:
         return f'{list(zip(self.goods, self.quant))} '
 
     def __float__(self):
-        return self.pay()
+        return self.get_total()
+
+    def __iter__(self) -> iter:
+        return zip(self.goods, self.quant)
 
     def __add__(self, other):
-        if isinstance(other, ShoppingCart):
-            temp = zip(other.goods, other.quant)
-            for x, y in temp:
-                self.add_goods(x, y)
-            return
-        return self.add_goods(other)
+        if isinstance(self, ShoppingCart) and isinstance(other, ShoppingCart):
+            temp = ShoppingCart()
+            temp.goods.extend(self.goods)
+            temp.quant.extend(self.quant)
+
+            for x, y in other:
+                temp.add_goods(x, y)
+            return temp
+        if isinstance(other, Product):
+            return self.add_goods(other, 1)
 
 
 apple = Product('apple', 1.8)
@@ -69,21 +76,26 @@ c1.add_goods(milk, 2)
 c1.add_goods(milk, 3)
 
 c1 + milk
-print(c1.goods)
-print(c1.quant)
+
 c2 = ShoppingCart()
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
 c2.add_goods(pc, 1)
 c2.add_goods(milk, 3)
-c1 + c2
+
+print(c1, 'c1')
+print(c2, 'c2')
+
+c3 = c1 + c2
 c1.add_goods(milk, 3)
 c1 + milk
+c4 = c1 + c3
+print(c1, '???')
+print(c3, 'c3')
+print(c4, 'c4')
+print(c1.get_total())
+print(c2.get_total())
 print(c1)
-print(c1.pay())
-print(c2.pay())
-print(c1)
-
 
 print(c1)
 print(c2)
